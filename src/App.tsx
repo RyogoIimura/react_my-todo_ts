@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, ChakraProvider, Heading, Input, Select } from "@chakra-ui/react";
+import { Box, Button, ChakraProvider, Heading } from "@chakra-ui/react";
 import './App.css';
 
 import { theme } from "./theme/theme";
@@ -14,86 +14,65 @@ function App() {
   // useState
   const [todo, setTodo] = useState<Todo>({
       title: '',
-      date: 0,
+      date: new Date(),
       term: '',
       status: '',
       cont: ''
     });
+  const [newTasks, setnewTasks] = useState<Array<Todo>>([]);
 
-  // function
-  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTodo((state) => ({ ...state, title: e.target.value}));
-    console.log(todo)
+  // function AddTodo
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, title: e.target.value}));
+  const onChangeTerm = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, term: e.target.value}));
+  const onChangeCont = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, cont: e.target.value}));
+  const onChangeStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setTodo((state) => ({ ...state, status: e.target.value}));
+  const onClickAdd = () => {
+    const newDate = new Date();
+    const year = newDate.getFullYear(); // 年
+    const month = newDate.getMonth(); // 月
+    const date = newDate.getDate(); // 日
+    const todoDate = new Date(year, month, date);
+
+    const task = [...newTasks];
+    task.push({
+      title: todo.title,
+      date: todoDate,
+      term: todo.term,
+      status: todo.status,
+      cont: todo.cont
+    });
+    setnewTasks(task);
+    // console.log(task);
+
+    setTodo({
+      title: '',
+      date: new Date(),
+      term: '',
+      status: '',
+      cont: ''
+    });
   };
+
+  // function NewTasks
+
+  // function EditTodo
 
   return (
     <ChakraProvider theme={theme}>
 
-      <Box w={{ base: '300px', md: '500px'}} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
-        <Heading as='h1' size='xl' noOfLines={1}>
-          My todo APP
-        </Heading>
-
-        <Box>
-          <Heading as='h2' size='lg' noOfLines={1} mt={5}>
-            タイトル
-          </Heading>
-          <Input
-            id='title'
-            value={todo.title}
-            onChange={onChangeTitle}
-          />
-        </Box>
-        <Box>
-          <Heading as='h2' size='lg' noOfLines={1} mt={5}>
-            期日
-          </Heading>
-          <Input
-            id='term'
-            value={todo.term}
-          />
-        </Box>
-        <Box>
-          <Heading as='h2' size='lg' noOfLines={1} mt={5}>
-            ステータス
-          </Heading>
-          <Select id='status' placeholder='Select option' value={todo.status}>
-            <option value='option1'>Option 1</option>
-            <option value='option2'>Option 2</option>
-            <option value='option3'>Option 3</option>
-          </Select>
-        </Box>
-        <Box>
-          <Heading as='h2' size='lg' noOfLines={1} mt={5}>
-            内容
-          </Heading>
-          <Input
-            id='cont'
-            value={todo.cont}
-            height={200}
-          />
-        </Box>
-
-        <Box
-          display='flex'
-          justifyContent='center'
-        >
-          <Button
-            mx='auto'
-            mt={5}
-          >
-            Add todo
-          </Button>
-        </Box>
-      </Box>
+      <AddTodo
+        todo={todo}
+        onChangeTitle={onChangeTitle}
+        onChangeTerm={onChangeTerm}
+        onChangeCont={onChangeCont}
+        onChangeStatus={onChangeStatus}
+        onClickAdd={onClickAdd}
+      />
 
 
 
 
 
-
-
-      <EditTodo />
 
       <Box id='new_task' w={{ base: '300px', md: '500px'}} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
         <Heading as='h2' size='lg' noOfLines={1} mt={5}>
@@ -113,6 +92,8 @@ function App() {
         {/* タスク一覧 */}
         <NewTasks />
       </Box>
+
+      {/* <EditTodo /> */}
     </ChakraProvider>
   );
 }
