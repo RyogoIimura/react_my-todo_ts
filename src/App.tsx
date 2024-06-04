@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, Button, ChakraProvider, Heading, ListItem, Select, UnorderedList } from "@chakra-ui/react";
 import './App.css';
 
 import { theme } from "./theme/theme";
@@ -13,7 +13,7 @@ import { Todo } from './types/todo';
 function App() {
 
   // Common
-  const [newTasks, setnewTasks] = useState<Array<Todo>>([]);
+  const [newTasks, setNewTasks] = useState<Array<Todo>>([]);
 
   const statusArray: Array<string> = [
     'Waiting',
@@ -44,7 +44,7 @@ function App() {
       status: todo.status,
       cont: todo.cont
     });
-    setnewTasks(task);
+    setNewTasks(task);
     // console.log(task);
 
     setTodo({
@@ -61,8 +61,33 @@ function App() {
   const onClickDelete = (index: number) => {
     const task = [...newTasks];
     task.splice(index,1)
-    setnewTasks(task);
+    setNewTasks(task);
   };
+
+  const [sort, setSort] = useState<string>('');
+  const sortArray: Array<string> = [
+    'Sort',
+    'Ascending',
+    'Descending'
+  ];
+
+  const onChangeSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const task = [...newTasks];
+    // Ascending の場合(昇順)
+    if( e.target.value === 'Ascending' ){
+      task.sort((a,b) => (a.term < b.term ? -1 : 1))
+    }
+    // Descending の場合(降順)
+    if( e.target.value === 'Descending' ){
+      task.sort((a,b) => (a.term > b.term ? -1 : 1))
+    }
+    // Sort の場合(作成日順)
+    if( e.target.value === 'Sort' ){
+      task.sort((a,b) => (a.date < b.date ? -1 : 1))
+    }
+    setNewTasks(task);
+    setSort(e.target.value)
+  }
 
 
   // EditTodo
@@ -100,7 +125,7 @@ function App() {
       status: edit.status,
       cont: edit.cont
     };
-    setnewTasks(task);
+    setNewTasks(task);
     document.body.classList.remove('visible');
   };
 
@@ -118,11 +143,78 @@ function App() {
         onClickAdd={onClickAdd}
       />
 
-      <NewTasks
+      <Box id='new_task' w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
+        <Heading as='h2' size='lg' noOfLines={1} mt={5}>
+          New task
+        </Heading>
+        <Box
+          display='flex'
+          justifyContent='flex-end'
+        >
+          <Select
+            id='sort'
+            w='fit-content'
+            value={sort}
+            onChange={onChangeSort}
+          >
+            {
+              sortArray.map((sort, index) => (
+                <option key={index}>{sort}</option>
+              ))
+            }
+          </Select>
+        </Box>
+
+        <Box >
+          <UnorderedList styleType="''" ml={0}>
+            {
+              newTasks.map((task, index) => (
+                <ListItem key={index} border='1px' px={8} py={5} mt={5} rounded={10}>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    タイトル : {task.title}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    作成日 : {`${task.date.getFullYear()}/${task.date.getMonth()+1}/${task.date.getDate()}`}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    期日 : {`${task.term.getFullYear()}/${task.term.getMonth()+1}/${task.term.getDate()}`}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    ステータス : {task.status}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    内容 : {task.cont}
+                  </Heading>
+
+                  <Box
+                    display='flex'
+                    justifyContent='center'
+                    mt={10}
+                  >
+                    <Button
+                      onClick={() => onClickEdit(index)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      ml={5}
+                      onClick={() => onClickDelete(index)}
+                    >
+                      Discontinued
+                    </Button>
+                  </Box>
+                </ListItem>
+              ))
+            }
+          </UnorderedList>
+        </Box>
+      </Box>
+
+      {/* <NewTasks
         newTasks={newTasks}
         onClickEdit={onClickEdit}
         onClickDelete={onClickDelete}
-      />
+      /> */}
 
       <EditTodo
         edit={edit}
