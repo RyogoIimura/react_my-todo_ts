@@ -1,7 +1,7 @@
 export type Todo = {
   title: string,
   date: Date,
-  term: Date,
+  term: number | string,
   status: string,
   cont: string
 };

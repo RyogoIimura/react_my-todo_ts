@@ -4,9 +4,14 @@ import { Box, Button, Heading, Input, Select, Textarea } from "@chakra-ui/react"
 import { Todo } from '../types/todo';
 
 
+const statusArray: Array<string> = [
+  'Waiting',
+  'Working',
+  'Completed'
+];
+
 type Props = {
   todo: Todo;
-  statusArray: Array<string>;
 
   // 質問ここから
   onChangeTitle: any;
@@ -21,10 +26,10 @@ type Props = {
 export const AddTodo: VFC<Props> = memo((props) => {
 
   // 分割代入
-  const { todo, statusArray, onChangeTitle, onChangeTerm, onChangeCont, onChangeStatus, onClickAdd, } = props;
+  const { todo, onChangeTitle, onChangeTerm, onChangeCont, onChangeStatus, onClickAdd, } = props;
 
   return (
-    <Box w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" backgroundColor='white' rounded={10} >
+    <Box w={{ base: '300px', md: '500px'}} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
       <Heading as='h1' size='xl' noOfLines={1}>
         My todo APP
       </Heading>
@@ -34,6 +39,7 @@ export const AddTodo: VFC<Props> = memo((props) => {
           タイトル
         </Heading>
         <Input
+          id='title'
           value={todo.title}
           onChange={onChangeTitle}
         />
@@ -43,8 +49,8 @@ export const AddTodo: VFC<Props> = memo((props) => {
           期日
         </Heading>
         <Input
-          type="date"
-          value={`${todo.term.getFullYear()}-${("0" + (todo.term.getMonth() + 1)).slice(-2)}-${("0" + todo.term.getDate()).slice(-2)}`}
+          id='term'
+          value={todo.term}
           onChange={onChangeTerm}
         />
       </Box>
@@ -53,6 +59,7 @@ export const AddTodo: VFC<Props> = memo((props) => {
           ステータス
         </Heading>
         <Select
+          id='status'
           value={todo.status}
           onChange={onChangeStatus}
         >
@@ -68,9 +75,10 @@ export const AddTodo: VFC<Props> = memo((props) => {
           内容
         </Heading>
         <Textarea
+          id='cont'
           value={todo.cont}
           onChange={onChangeCont}
-          height={150}
+          height={200}
         />
       </Box>
 
