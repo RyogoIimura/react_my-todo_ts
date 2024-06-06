@@ -4,7 +4,6 @@ import './App.css';
 
 import { theme } from "./theme/theme";
 import { AddTodo } from './components/AddTodo';
-import { EditTodo } from './components/EditTodo';
 import { NewTasks } from './components/NewTasks';
 
 import { Todo } from './types/todo';
@@ -102,7 +101,7 @@ function App() {
   });
 
   const onClickEdit = (index: number) => {
-    document.body.classList.add('visible');
+    // document.body.classList.add('visible');
     setEdit({
       title: newTasks[index].title,
       date: newTasks[index].date,
@@ -126,7 +125,15 @@ function App() {
       cont: edit.cont
     };
     setNewTasks(task);
-    document.body.classList.remove('visible');
+    setEdit({
+      title: '',
+      date: new Date(),
+      term: new Date(),
+      status: '',
+      cont: '',
+      index: 0
+    });
+    // document.body.classList.remove('visible');
   };
 
 
@@ -150,9 +157,8 @@ function App() {
         onChangeSort={onChangeSort}
         onClickEdit={onClickEdit}
         onClickDelete={onClickDelete}
-      />
 
-      <EditTodo
+        // EditTodo
         edit={edit}
         statusArray={statusArray}
         onChangeEditTitle={onChangeEditTitle}
