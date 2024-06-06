@@ -2,3 +2,15 @@
 body {
   padding: 100px 0;
 }
+
+#new_task, div, ul, li {
+  & .Waiting {
+    background-color: rgba(50,66,154,.2);
+  }
+  & .Working {
+    background-color: rgba(248,205,139,.2);
+  }
+  & .Completed {
+    background-color: rgba(214,91,38,.2);
+  }
+}

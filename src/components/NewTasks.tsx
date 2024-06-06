@@ -81,7 +81,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
           <UnorderedList styleType="''" ml={0}>
             {
               newTasks.map((task, index) => (
-                <ListItem key={index} border='1px' px={8} py={5} mt={5} rounded={10}>
+                <ListItem key={index} className={task.status} border='1px' px={8} py={5} mt={5} rounded={10}>
                   <Heading as='h3' size='md' noOfLines={1} mt={5}>
                     <Box as='span' whiteSpace="nowrap">タイトル</Box>&nbsp;:&nbsp;{task.title}
                   </Heading>

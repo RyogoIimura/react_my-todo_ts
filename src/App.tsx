@@ -26,7 +26,7 @@ function App() {
     title: '',
     date: new Date(),
     term: new Date(),
-    status: '',
+    status: 'Waiting',
     cont: ''
   });
 
@@ -50,7 +50,7 @@ function App() {
       title: '',
       date: new Date(),
       term: new Date(),
-      status: '',
+      status: 'Waiting',
       cont: ''
     });
   };
@@ -63,7 +63,7 @@ function App() {
     setNewTasks(task);
   };
 
-  const [sort, setSort] = useState<string>('');
+  const [sort, setSort] = useState<string>('Sort');
   const sortArray: Array<string> = [
     'Sort',
     'Ascending',
