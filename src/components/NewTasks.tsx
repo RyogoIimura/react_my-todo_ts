@@ -47,19 +47,19 @@ export const NewTasks: VFC<Props> = memo((props) => {
             newTasks.map((task, index) => (
               <ListItem key={index} border='1px' px={8} py={5} mt={5} rounded={10}>
                 <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                  タイトル : {task.title}
+                  <Box as='span' whiteSpace="nowrap">タイトル</Box>&nbsp;:&nbsp;{task.title}
                 </Heading>
                 <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                  作成日 : {`${task.date.getFullYear()}/${task.date.getMonth()+1}/${task.date.getDate()}`}
+                  作成日&nbsp;:&nbsp;{`${task.date.getFullYear()}/${task.date.getMonth()+1}/${task.date.getDate()}`}
                 </Heading>
                 <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                  期日 : {`${task.term.getFullYear()}/${task.term.getMonth()+1}/${task.term.getDate()}`}
+                  期日&nbsp;:&nbsp;{`${task.term.getFullYear()}/${task.term.getMonth()+1}/${task.term.getDate()}`}
                 </Heading>
                 <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                  ステータス : {task.status}
+                  ステータス&nbsp;:&nbsp;{task.status}
                 </Heading>
-                <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                  内容 : {task.cont}
+                <Heading as='h3' size='md' overflow="hidden" mt={5}>
+                  <Box as='span' whiteSpace="nowrap">内容</Box>&nbsp;:&nbsp;{task.cont}
                 </Heading>
 
                 <Box
