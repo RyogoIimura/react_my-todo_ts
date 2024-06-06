@@ -7,10 +7,14 @@ import { Todo } from '../types/todo';
 type Props = {
   todo: Todo;
   statusArray: Array<string>;
-  onChangeTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeCont: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onChangeStatus: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+
+  // 質問ここから
+  onChangeTitle: any;
+  onChangeTerm: any;
+  onChangeCont: any;
+  onChangeStatus: any;
+  // 質問ここまで
+
   onClickAdd: () => void;
 }
 
@@ -77,7 +81,6 @@ export const AddTodo: VFC<Props> = memo((props) => {
         <Button
           mx='auto'
           mt={5}
-          isDisabled={todo.title===''||todo.cont===''}
           onClick={onClickAdd}
         >
           Add todo

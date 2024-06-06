@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, Button, ChakraProvider, Heading, ListItem, Select, UnorderedList } from "@chakra-ui/react";
 import './App.css';
 
 import { theme } from "./theme/theme";
 import { AddTodo } from './components/AddTodo';
+import { EditTodo } from './components/EditTodo';
 import { NewTasks } from './components/NewTasks';
 
 import { Todo } from './types/todo';
@@ -101,7 +102,7 @@ function App() {
   });
 
   const onClickEdit = (index: number) => {
-    // document.body.classList.add('visible');
+    document.body.classList.add('visible');
     setEdit({
       title: newTasks[index].title,
       date: newTasks[index].date,
@@ -125,15 +126,7 @@ function App() {
       cont: edit.cont
     };
     setNewTasks(task);
-    setEdit({
-      title: '',
-      date: new Date(),
-      term: new Date(),
-      status: '',
-      cont: '',
-      index: 0
-    });
-    // document.body.classList.remove('visible');
+    document.body.classList.remove('visible');
   };
 
 
@@ -150,15 +143,80 @@ function App() {
         onClickAdd={onClickAdd}
       />
 
-      <NewTasks
-        sort={sort}
+      <Box id='new_task' w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
+        <Heading as='h2' size='lg' noOfLines={1} mt={5}>
+          New task
+        </Heading>
+        <Box
+          display='flex'
+          justifyContent='flex-end'
+        >
+          <Select
+            id='sort'
+            w='fit-content'
+            value={sort}
+            onChange={onChangeSort}
+          >
+            {
+              sortArray.map((sort, index) => (
+                <option key={index}>{sort}</option>
+              ))
+            }
+          </Select>
+        </Box>
+
+        <Box >
+          <UnorderedList styleType="''" ml={0}>
+            {
+              newTasks.map((task, index) => (
+                <ListItem key={index} border='1px' px={8} py={5} mt={5} rounded={10}>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    タイトル : {task.title}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    作成日 : {`${task.date.getFullYear()}/${task.date.getMonth()+1}/${task.date.getDate()}`}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    期日 : {`${task.term.getFullYear()}/${task.term.getMonth()+1}/${task.term.getDate()}`}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    ステータス : {task.status}
+                  </Heading>
+                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
+                    内容 : {task.cont}
+                  </Heading>
+
+                  <Box
+                    display='flex'
+                    justifyContent='center'
+                    mt={10}
+                  >
+                    <Button
+                      onClick={() => onClickEdit(index)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      ml={5}
+                      onClick={() => onClickDelete(index)}
+                    >
+                      Discontinued
+                    </Button>
+                  </Box>
+                </ListItem>
+              ))
+            }
+          </UnorderedList>
+        </Box>
+      </Box>
+
+      {/* <NewTasks
         newTasks={newTasks}
-        sortArray={sortArray}
-        onChangeSort={onChangeSort}
         onClickEdit={onClickEdit}
         onClickDelete={onClickDelete}
+      /> */}
 
-        // EditTodo
+      <EditTodo
         edit={edit}
         statusArray={statusArray}
         onChangeEditTitle={onChangeEditTitle}

@@ -1,4 +1,16 @@
 
+body #root #edit_todo {
+  display: none;
+}
+
 body {
   padding: 100px 0;
+
+  &.visible {
+    overflow: hidden
+  }
+
+  &.visible #root #edit_todo  {
+    display: flex;
+  }
 }
