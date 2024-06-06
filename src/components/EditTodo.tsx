@@ -7,14 +7,10 @@ import { Todo } from '../types/todo';
 type Props = {
   edit: Todo;
   statusArray: Array<string>;
-
-  // 質問ここから
-  onChangeEditTitle: any;
-  onChangeEditTerm: any;
-  onChangeEditStatus: any;
-  onChangeEditCont: any;
-  // 質問ここまで
-
+  onChangeEditTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeEditTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeEditStatus: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChangeEditCont: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onClickEditKeep: () => void;
 }
 

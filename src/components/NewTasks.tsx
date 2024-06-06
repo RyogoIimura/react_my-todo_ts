@@ -1,19 +1,22 @@
 import { memo, VFC } from "react";
-import { Box, Button, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Box, Button, Heading, ListItem, Select, UnorderedList } from "@chakra-ui/react";
 
 import { Todo } from '../types/todo';
 
 
 type Props = {
+  sort: string;
   newTasks: Array<Todo>;
-  onClickEdit: any;
-  onClickDelete: any;
+  sortArray: Array<string>;
+  onChangeSort: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onClickEdit: (index: number) => void;
+  onClickDelete: (index: number) => void;
 }
 
 export const NewTasks: VFC<Props> = memo((props) => {
 
   // 分割代入
-  const { newTasks, onClickEdit, onClickDelete } = props;
+  const { sort, newTasks, sortArray, onChangeSort, onClickEdit, onClickDelete } = props;
 
   return (
     <Box id='new_task' w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
@@ -24,11 +27,18 @@ export const NewTasks: VFC<Props> = memo((props) => {
         display='flex'
         justifyContent='flex-end'
       >
-        <Button
+        <Select
           id='sort'
+          w='fit-content'
+          value={sort}
+          onChange={onChangeSort}
         >
-          Sort
-        </Button>
+          {
+            sortArray.map((sort, index) => (
+              <option key={index}>{sort}</option>
+            ))
+          }
+        </Select>
       </Box>
 
       <Box >

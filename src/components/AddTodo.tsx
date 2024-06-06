@@ -7,14 +7,10 @@ import { Todo } from '../types/todo';
 type Props = {
   todo: Todo;
   statusArray: Array<string>;
-
-  // 質問ここから
-  onChangeTitle: any;
-  onChangeTerm: any;
-  onChangeCont: any;
-  onChangeStatus: any;
-  // 質問ここまで
-
+  onChangeTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeCont: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChangeStatus: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onClickAdd: () => void;
 }
 
