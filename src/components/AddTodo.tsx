@@ -77,6 +77,7 @@ export const AddTodo: VFC<Props> = memo((props) => {
         <Button
           mx='auto'
           mt={5}
+          isDisabled={todo.title===''||todo.cont===''}
           onClick={onClickAdd}
         >
           Add todo

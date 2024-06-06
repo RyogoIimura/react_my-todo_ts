@@ -18,7 +18,7 @@ type Props = {
   onClickDelete: (index: number) => void;
 
   // EditTodo
-  edit: Todo;
+  edit: Todo & {index: number};
   statusArray: Array<string>;
   onChangeEditTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeEditTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -39,6 +39,19 @@ export const NewTasks: VFC<Props> = memo((props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const beSaved = () => {
+    if( edit.title != '' ){
+      return (
+        newTasks[edit.index].title == edit.title &&
+        newTasks[edit.index].term.getFullYear() == edit.term.getFullYear() &&
+        newTasks[edit.index].term.getMonth() == edit.term.getMonth() &&
+        newTasks[edit.index].term.getDate() == edit.term.getDate() &&
+        newTasks[edit.index].status==edit.status &&
+        newTasks[edit.index].cont==edit.cont
+      )
+    }
+  }
+
   return (
     <>
       <Box id='new_task' w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
@@ -54,6 +67,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
             w='fit-content'
             value={sort}
             onChange={onChangeSort}
+            isDisabled={newTasks.length<=1}
           >
             {
               sortArray.map((sort, index) => (
@@ -134,6 +148,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
                   onClickEditKeep();
                   onClose();
                 }}
+                isDisabled={beSaved()}
               >
                 Keep
               </Button>
