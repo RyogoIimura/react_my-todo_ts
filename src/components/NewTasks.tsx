@@ -1,4 +1,4 @@
-import { memo, VFC } from "react";
+import { memo, useCallback, useState, VFC } from "react";
 import {
   Box, Button, Heading, ListItem, Select, UnorderedList,
   Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, useDisclosure, ModalFooter,
@@ -14,17 +14,11 @@ type Props = {
   newTasks: Array<Todo>;
   sortArray: Array<string>;
   onChangeSort: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onClickEdit: (index: number) => void;
   onClickDelete: (index: number) => void;
 
   // EditTodo
-  edit: Todo & {index: number};
   statusArray: Array<string>;
-  onChangeEditTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeEditTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeEditStatus: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onChangeEditCont: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onClickEditKeep: () => void;
+  setNewTasks: React.Dispatch<React.SetStateAction<Todo[]>>
 }
 
 export const NewTasks: VFC<Props> = memo((props) => {
@@ -32,13 +26,61 @@ export const NewTasks: VFC<Props> = memo((props) => {
   // 分割代入
   const {
     // NewTasks
-    sort, newTasks, sortArray, onChangeSort, onClickEdit, onClickDelete,
+    sort, newTasks, sortArray, onChangeSort, onClickDelete,
     // EditTodo
-    edit, statusArray, onChangeEditTitle, onChangeEditTerm, onChangeEditStatus, onChangeEditCont, onClickEditKeep
+    statusArray, setNewTasks
   } = props;
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // EditTodo
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const onClickEditOpen = useCallback(() => onOpen(), []);
+
+  type Edit =  Todo & {index: number};
+  const [edit, setEdit] = useState<Edit>({
+    title: '',
+    date: new Date(),
+    term: new Date(),
+    status: '',
+    cont: '',
+    index: 0
+  });
+
+  const onClickEdit = (index: number) => {
+    // document.body.classList.add('visible');
+    setEdit({
+      title: newTasks[index].title,
+      date: newTasks[index].date,
+      term: newTasks[index].term,
+      status: newTasks[index].status,
+      cont: newTasks[index].cont,
+      index
+    });
+  }
+  const onChangeEditTitle = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, title: e.target.value}));
+  const onChangeEditTerm = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, term: new Date(e.target.value)}));
+  const onChangeEditCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setEdit((state) => ({ ...state, cont: e.target.value}));
+  const onChangeEditStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setEdit((state) => ({ ...state, status: e.target.value}));
+  const onClickEditKeep = () => {
+    const task = [...newTasks];
+    task[edit.index] = {
+      title: edit.title,
+      date: new Date(),
+      term: edit.term,
+      status: edit.status,
+      cont: edit.cont
+    };
+    setNewTasks(task);
+    setEdit({
+      title: '',
+      date: new Date(),
+      term: new Date(),
+      status: '',
+      cont: '',
+      index: 0
+    });
+    // document.body.classList.remove('visible');
+  };
   const beSaved = () => {
     if( edit.title != '' ){
       return (
@@ -51,6 +93,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
       )
     }
   }
+
 
   return (
     <>
@@ -106,7 +149,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
                     <Button
                       onClick={() => {
                         onClickEdit(index);
-                        onOpen();
+                        onClickEditOpen();
                       }}
                     >
                       Edit

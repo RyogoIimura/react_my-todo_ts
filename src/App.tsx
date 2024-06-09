@@ -89,54 +89,6 @@ function App() {
   }
 
 
-  // EditTodo
-  type Edit =  Todo & {index: number};
-  const [edit, setEdit] = useState<Edit>({
-    title: '',
-    date: new Date(),
-    term: new Date(),
-    status: '',
-    cont: '',
-    index: 0
-  });
-
-  const onClickEdit = (index: number) => {
-    // document.body.classList.add('visible');
-    setEdit({
-      title: newTasks[index].title,
-      date: newTasks[index].date,
-      term: newTasks[index].term,
-      status: newTasks[index].status,
-      cont: newTasks[index].cont,
-      index
-    });
-  }
-  const onChangeEditTitle = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, title: e.target.value}));
-  const onChangeEditTerm = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, term: new Date(e.target.value)}));
-  const onChangeEditCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setEdit((state) => ({ ...state, cont: e.target.value}));
-  const onChangeEditStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setEdit((state) => ({ ...state, status: e.target.value}));
-  const onClickEditKeep = () => {
-    const task = [...newTasks];
-    task[edit.index] = {
-      title: edit.title,
-      date: new Date(),
-      term: edit.term,
-      status: edit.status,
-      cont: edit.cont
-    };
-    setNewTasks(task);
-    setEdit({
-      title: '',
-      date: new Date(),
-      term: new Date(),
-      status: '',
-      cont: '',
-      index: 0
-    });
-    // document.body.classList.remove('visible');
-  };
-
-
   return (
     <ChakraProvider theme={theme}>
 
@@ -155,17 +107,11 @@ function App() {
         newTasks={newTasks}
         sortArray={sortArray}
         onChangeSort={onChangeSort}
-        onClickEdit={onClickEdit}
         onClickDelete={onClickDelete}
 
         // EditTodo
-        edit={edit}
         statusArray={statusArray}
-        onChangeEditTitle={onChangeEditTitle}
-        onChangeEditTerm={onChangeEditTerm}
-        onChangeEditStatus={onChangeEditStatus}
-        onChangeEditCont={onChangeEditCont}
-        onClickEditKeep={onClickEditKeep}
+        setNewTasks={setNewTasks}
       />
     </ChakraProvider>
   );
