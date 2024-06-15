@@ -1,99 +1,117 @@
 import React, { useState } from 'react';
-import { Box, Button, ChakraProvider, Heading } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import './App.css';
 
 import { theme } from "./theme/theme";
 import { AddTodo } from './components/AddTodo';
-import { EditTodo } from './components/EditTodo';
 import { NewTasks } from './components/NewTasks';
 
 import { Todo } from './types/todo';
 
+
 function App() {
 
-  // useState
+  const [newTasks, setNewTasks] = useState<Array<Todo>>([]);
+
+  const statusArray: Array<string> = [
+    'Waiting',
+    'Working',
+    'Completed'
+  ];
+
+  const dueDate = (date: Date) => `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+
+
   const [todo, setTodo] = useState<Todo>({
-      title: '',
-      date: new Date(),
-      term: '',
-      status: '',
-      cont: ''
-    });
-  const [newTasks, setnewTasks] = useState<Array<Todo>>([]);
+    title: '',
+    date: new Date(),
+    term: new Date(),
+    status: 'Waiting',
+    cont: ''
+  });
 
-  // function AddTodo
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, title: e.target.value}));
-  const onChangeTerm = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, term: e.target.value}));
-  const onChangeCont = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, cont: e.target.value}));
-  const onChangeStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setTodo((state) => ({ ...state, status: e.target.value}));
+  const onChangeTerm = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, term: new Date(e.target.value)}));
+  const onChangeCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTodo((state) => ({ ...state, cont: e.target.value}));
+  const onChangeStatus = (e: any) => setTodo((state) => ({ ...state, status: e.target.value}));
   const onClickAdd = () => {
-    const newDate = new Date();
-    const year = newDate.getFullYear(); // 年
-    const month = newDate.getMonth(); // 月
-    const date = newDate.getDate(); // 日
-    const todoDate = new Date(year, month, date);
-
     const task = [...newTasks];
     task.push({
       title: todo.title,
-      date: todoDate,
+      date: new Date(),
       term: todo.term,
       status: todo.status,
       cont: todo.cont
     });
-    setnewTasks(task);
-    // console.log(task);
+    setNewTasks(task);
 
     setTodo({
       title: '',
       date: new Date(),
-      term: '',
-      status: '',
+      term: new Date(),
+      status: 'Waiting',
       cont: ''
     });
   };
 
-  // function NewTasks
 
-  // function EditTodo
+  const onClickDelete = (index: number) => {
+    const task = [...newTasks];
+    task.splice(index,1)
+    setNewTasks(task);
+  };
+
+  const [sort, setSort] = useState<string>('Sort');
+  const sortArray: Array<string> = [
+    'Sort',
+    'Ascending',
+    'Descending'
+  ];
+
+  const onChangeSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const task = [...newTasks];
+    // Ascending の場合(昇順)
+    if( e.target.value === 'Ascending' ){
+      task.sort((a,b) => (a.term < b.term ? -1 : 1))
+    }
+    // Descending の場合(降順)
+    if( e.target.value === 'Descending' ){
+      task.sort((a,b) => (a.term > b.term ? -1 : 1))
+    }
+    // Sort の場合(作成日順)
+    if( e.target.value === 'Sort' ){
+      task.sort((a,b) => (a.date < b.date ? -1 : 1))
+    }
+    setNewTasks(task);
+    setSort(e.target.value)
+  }
+
 
   return (
     <ChakraProvider theme={theme}>
 
       <AddTodo
         todo={todo}
+        statusArray={statusArray}
         onChangeTitle={onChangeTitle}
         onChangeTerm={onChangeTerm}
         onChangeCont={onChangeCont}
         onChangeStatus={onChangeStatus}
         onClickAdd={onClickAdd}
+        dueDate={dueDate}
       />
 
+      <NewTasks
+        sort={sort}
+        newTasks={newTasks}
+        sortArray={sortArray}
+        onChangeSort={onChangeSort}
+        onClickDelete={onClickDelete}
 
-
-
-
-
-      <Box id='new_task' w={{ base: '300px', md: '500px'}} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
-        <Heading as='h2' size='lg' noOfLines={1} mt={5}>
-          New task
-        </Heading>
-        <Box
-          display='flex'
-          justifyContent='flex-end'
-        >
-          <Button
-            id='sort'
-          >
-            Sort
-          </Button>
-        </Box>
-
-        {/* タスク一覧 */}
-        <NewTasks />
-      </Box>
-
-      {/* <EditTodo /> */}
+        statusArray={statusArray}
+        setNewTasks={setNewTasks}
+        dueDate={dueDate}
+      />
     </ChakraProvider>
   );
 }
