@@ -11,7 +11,6 @@ import { Todo } from './types/todo';
 
 function App() {
 
-  // Common
   const [newTasks, setNewTasks] = useState<Array<Todo>>([]);
 
   const statusArray: Array<string> = [
@@ -20,8 +19,9 @@ function App() {
     'Completed'
   ];
 
+  const dueDate = (date: Date) => `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
 
-  // AddTodo
+
   const [todo, setTodo] = useState<Todo>({
     title: '',
     date: new Date(),
@@ -33,7 +33,7 @@ function App() {
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, title: e.target.value}));
   const onChangeTerm = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, term: new Date(e.target.value)}));
   const onChangeCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTodo((state) => ({ ...state, cont: e.target.value}));
-  const onChangeStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setTodo((state) => ({ ...state, status: e.target.value}));
+  const onChangeStatus = (e: any) => setTodo((state) => ({ ...state, status: e.target.value}));
   const onClickAdd = () => {
     const task = [...newTasks];
     task.push({
@@ -44,7 +44,6 @@ function App() {
       cont: todo.cont
     });
     setNewTasks(task);
-    // console.log(task);
 
     setTodo({
       title: '',
@@ -56,7 +55,6 @@ function App() {
   };
 
 
-  // NewTasks
   const onClickDelete = (index: number) => {
     const task = [...newTasks];
     task.splice(index,1)
@@ -100,6 +98,7 @@ function App() {
         onChangeCont={onChangeCont}
         onChangeStatus={onChangeStatus}
         onClickAdd={onClickAdd}
+        dueDate={dueDate}
       />
 
       <NewTasks
@@ -109,9 +108,9 @@ function App() {
         onChangeSort={onChangeSort}
         onClickDelete={onClickDelete}
 
-        // EditTodo
         statusArray={statusArray}
         setNewTasks={setNewTasks}
+        dueDate={dueDate}
       />
     </ChakraProvider>
   );

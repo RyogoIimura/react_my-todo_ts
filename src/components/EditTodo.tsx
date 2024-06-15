@@ -11,12 +11,13 @@ type Props = {
   onChangeEditTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeEditStatus: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onChangeEditCont: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  dueDate: (date: Date) => string;
 }
 
 export const EditTodo: VFC<Props> = memo((props) => {
 
   // 分割代入
-  const { edit, statusArray, onChangeEditTitle, onChangeEditTerm, onChangeEditStatus, onChangeEditCont } = props;
+  const { edit, statusArray, onChangeEditTitle, onChangeEditTerm, onChangeEditStatus, onChangeEditCont, dueDate } = props;
 
   return (
     <Box>
@@ -35,7 +36,7 @@ export const EditTodo: VFC<Props> = memo((props) => {
         </Heading>
         <Input
           type="date"
-          value={`${edit.term.getFullYear()}-${("0" + (edit.term.getMonth() + 1)).slice(-2)}-${("0" + edit.term.getDate()).slice(-2)}`}
+          value={dueDate(edit.term)}
           onChange={onChangeEditTerm}
         />
       </Box>

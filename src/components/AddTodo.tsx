@@ -7,6 +7,7 @@ import { Todo } from '../types/todo';
 type Props = {
   todo: Todo;
   statusArray: Array<string>;
+  dueDate: (date: Date) => string;
   onChangeTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeTerm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeCont: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -17,7 +18,9 @@ type Props = {
 export const AddTodo: VFC<Props> = memo((props) => {
 
   // 分割代入
-  const { todo, statusArray, onChangeTitle, onChangeTerm, onChangeCont, onChangeStatus, onClickAdd, } = props;
+  const { todo, statusArray, dueDate, onChangeTitle, onChangeTerm, onChangeCont, onChangeStatus, onClickAdd, } = props;
+
+  const disabledJudge = (todo: Todo): boolean => todo.title==='' || todo.cont==='';
 
   return (
     <Box w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" backgroundColor='white' rounded={10} >
@@ -40,7 +43,7 @@ export const AddTodo: VFC<Props> = memo((props) => {
         </Heading>
         <Input
           type="date"
-          value={`${todo.term.getFullYear()}-${("0" + (todo.term.getMonth() + 1)).slice(-2)}-${("0" + todo.term.getDate()).slice(-2)}`}
+          value={dueDate(todo.term)}
           onChange={onChangeTerm}
         />
       </Box>
@@ -77,7 +80,7 @@ export const AddTodo: VFC<Props> = memo((props) => {
         <Button
           mx='auto'
           mt={5}
-          isDisabled={todo.title===''||todo.cont===''}
+          isDisabled={disabledJudge(todo)}
           onClick={onClickAdd}
         >
           Add todo

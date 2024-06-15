@@ -9,30 +9,27 @@ import { EditTodo } from "./EditTodo";
 
 
 type Props = {
-  // NewTasks
   sort: string;
   newTasks: Array<Todo>;
   sortArray: Array<string>;
   onChangeSort: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onClickDelete: (index: number) => void;
 
-  // EditTodo
   statusArray: Array<string>;
-  setNewTasks: React.Dispatch<React.SetStateAction<Todo[]>>
+  setNewTasks: React.Dispatch<React.SetStateAction<Todo[]>>;
+  dueDate: (date: Date) => string;
 }
 
 export const NewTasks: VFC<Props> = memo((props) => {
 
   // 分割代入
   const {
-    // NewTasks
     sort, newTasks, sortArray, onChangeSort, onClickDelete,
-    // EditTodo
-    statusArray, setNewTasks
+    statusArray, setNewTasks, dueDate
   } = props;
 
+  const createdDate = (date: Date) => `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
 
-  // EditTodo
   const { isOpen, onOpen, onClose } = useDisclosure();
   const onClickEditOpen = useCallback(() => onOpen(), []);
 
@@ -41,13 +38,12 @@ export const NewTasks: VFC<Props> = memo((props) => {
     title: '',
     date: new Date(),
     term: new Date(),
-    status: '',
+    status: 'Waiting',
     cont: '',
     index: 0
   });
 
   const onClickEdit = (index: number) => {
-    // document.body.classList.add('visible');
     setEdit({
       title: newTasks[index].title,
       date: newTasks[index].date,
@@ -60,7 +56,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
   const onChangeEditTitle = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, title: e.target.value}));
   const onChangeEditTerm = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, term: new Date(e.target.value)}));
   const onChangeEditCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setEdit((state) => ({ ...state, cont: e.target.value}));
-  const onChangeEditStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setEdit((state) => ({ ...state, status: e.target.value}));
+  const onChangeEditStatus = (e: any) => setEdit((state) => ({ ...state, status: e.target.value}));
   const onClickEditKeep = () => {
     const task = [...newTasks];
     task[edit.index] = {
@@ -75,11 +71,10 @@ export const NewTasks: VFC<Props> = memo((props) => {
       title: '',
       date: new Date(),
       term: new Date(),
-      status: '',
+      status: 'Waiting',
       cont: '',
       index: 0
     });
-    // document.body.classList.remove('visible');
   };
   const beSaved = () => {
     if( edit.title != '' ){
@@ -129,10 +124,10 @@ export const NewTasks: VFC<Props> = memo((props) => {
                     <Box as='span' whiteSpace="nowrap">タイトル</Box>&nbsp;:&nbsp;{task.title}
                   </Heading>
                   <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    作成日&nbsp;:&nbsp;{`${task.date.getFullYear()}/${task.date.getMonth()+1}/${task.date.getDate()}`}
+                    作成日&nbsp;:&nbsp;{createdDate(task.date)}
                   </Heading>
                   <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    期日&nbsp;:&nbsp;{`${task.term.getFullYear()}/${task.term.getMonth()+1}/${task.term.getDate()}`}
+                    期日&nbsp;:&nbsp;{createdDate(task.term)}
                   </Heading>
                   <Heading as='h3' size='md' noOfLines={1} mt={5}>
                     ステータス&nbsp;:&nbsp;{task.status}
@@ -180,6 +175,7 @@ export const NewTasks: VFC<Props> = memo((props) => {
               onChangeEditTerm={onChangeEditTerm}
               onChangeEditStatus={onChangeEditStatus}
               onChangeEditCont={onChangeEditCont}
+              dueDate={dueDate}
             />
           </ModalBody>
           <ModalFooter>
