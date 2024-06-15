@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Button, ChakraProvider, Heading, ListItem, Select, UnorderedList } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import './App.css';
 
 import { theme } from "./theme/theme";
 import { AddTodo } from './components/AddTodo';
-import { EditTodo } from './components/EditTodo';
 import { NewTasks } from './components/NewTasks';
 
 import { Todo } from './types/todo';
@@ -12,7 +11,6 @@ import { Todo } from './types/todo';
 
 function App() {
 
-  // Common
   const [newTasks, setNewTasks] = useState<Array<Todo>>([]);
 
   const statusArray: Array<string> = [
@@ -21,20 +19,21 @@ function App() {
     'Completed'
   ];
 
+  const dueDate = (date: Date) => `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
 
-  // AddTodo
+
   const [todo, setTodo] = useState<Todo>({
     title: '',
     date: new Date(),
     term: new Date(),
-    status: '',
+    status: 'Waiting',
     cont: ''
   });
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, title: e.target.value}));
   const onChangeTerm = (e: React.ChangeEvent<HTMLInputElement>) => setTodo((state) => ({ ...state, term: new Date(e.target.value)}));
   const onChangeCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTodo((state) => ({ ...state, cont: e.target.value}));
-  const onChangeStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setTodo((state) => ({ ...state, status: e.target.value}));
+  const onChangeStatus = (e: any) => setTodo((state) => ({ ...state, status: e.target.value}));
   const onClickAdd = () => {
     const task = [...newTasks];
     task.push({
@@ -45,26 +44,24 @@ function App() {
       cont: todo.cont
     });
     setNewTasks(task);
-    // console.log(task);
 
     setTodo({
       title: '',
       date: new Date(),
       term: new Date(),
-      status: '',
+      status: 'Waiting',
       cont: ''
     });
   };
 
 
-  // NewTasks
   const onClickDelete = (index: number) => {
     const task = [...newTasks];
     task.splice(index,1)
     setNewTasks(task);
   };
 
-  const [sort, setSort] = useState<string>('');
+  const [sort, setSort] = useState<string>('Sort');
   const sortArray: Array<string> = [
     'Sort',
     'Ascending',
@@ -90,46 +87,6 @@ function App() {
   }
 
 
-  // EditTodo
-  type Edit =  Todo & {index: number};
-  const [edit, setEdit] = useState<Edit>({
-    title: '',
-    date: new Date(),
-    term: new Date(),
-    status: '',
-    cont: '',
-    index: 0
-  });
-
-  const onClickEdit = (index: number) => {
-    document.body.classList.add('visible');
-    setEdit({
-      title: newTasks[index].title,
-      date: newTasks[index].date,
-      term: newTasks[index].term,
-      status: newTasks[index].status,
-      cont: newTasks[index].cont,
-      index
-    });
-  }
-  const onChangeEditTitle = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, title: e.target.value}));
-  const onChangeEditTerm = (e: React.ChangeEvent<HTMLInputElement>) => setEdit((state) => ({ ...state, term: new Date(e.target.value)}));
-  const onChangeEditCont = (e: React.ChangeEvent<HTMLTextAreaElement>) => setEdit((state) => ({ ...state, cont: e.target.value}));
-  const onChangeEditStatus = (e: React.ChangeEvent<HTMLSelectElement>) => setEdit((state) => ({ ...state, status: e.target.value}));
-  const onClickEditKeep = () => {
-    const task = [...newTasks];
-    task[edit.index] = {
-      title: edit.title,
-      date: new Date(),
-      term: edit.term,
-      status: edit.status,
-      cont: edit.cont
-    };
-    setNewTasks(task);
-    document.body.classList.remove('visible');
-  };
-
-
   return (
     <ChakraProvider theme={theme}>
 
@@ -141,89 +98,19 @@ function App() {
         onChangeCont={onChangeCont}
         onChangeStatus={onChangeStatus}
         onClickAdd={onClickAdd}
+        dueDate={dueDate}
       />
 
-      <Box id='new_task' w={{ base: '350px', md: '600px' }} px={8} py={5} mx="auto" mt={10} backgroundColor='white' rounded={10} >
-        <Heading as='h2' size='lg' noOfLines={1} mt={5}>
-          New task
-        </Heading>
-        <Box
-          display='flex'
-          justifyContent='flex-end'
-        >
-          <Select
-            id='sort'
-            w='fit-content'
-            value={sort}
-            onChange={onChangeSort}
-          >
-            {
-              sortArray.map((sort, index) => (
-                <option key={index}>{sort}</option>
-              ))
-            }
-          </Select>
-        </Box>
-
-        <Box >
-          <UnorderedList styleType="''" ml={0}>
-            {
-              newTasks.map((task, index) => (
-                <ListItem key={index} border='1px' px={8} py={5} mt={5} rounded={10}>
-                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    タイトル : {task.title}
-                  </Heading>
-                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    作成日 : {`${task.date.getFullYear()}/${task.date.getMonth()+1}/${task.date.getDate()}`}
-                  </Heading>
-                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    期日 : {`${task.term.getFullYear()}/${task.term.getMonth()+1}/${task.term.getDate()}`}
-                  </Heading>
-                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    ステータス : {task.status}
-                  </Heading>
-                  <Heading as='h3' size='md' noOfLines={1} mt={5}>
-                    内容 : {task.cont}
-                  </Heading>
-
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    mt={10}
-                  >
-                    <Button
-                      onClick={() => onClickEdit(index)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      ml={5}
-                      onClick={() => onClickDelete(index)}
-                    >
-                      Discontinued
-                    </Button>
-                  </Box>
-                </ListItem>
-              ))
-            }
-          </UnorderedList>
-        </Box>
-      </Box>
-
-      {/* <NewTasks
+      <NewTasks
+        sort={sort}
         newTasks={newTasks}
-        onClickEdit={onClickEdit}
+        sortArray={sortArray}
+        onChangeSort={onChangeSort}
         onClickDelete={onClickDelete}
-      /> */}
 
-      <EditTodo
-        edit={edit}
         statusArray={statusArray}
-        onChangeEditTitle={onChangeEditTitle}
-        onChangeEditTerm={onChangeEditTerm}
-        onChangeEditStatus={onChangeEditStatus}
-        onChangeEditCont={onChangeEditCont}
-        onClickEditKeep={onClickEditKeep}
+        setNewTasks={setNewTasks}
+        dueDate={dueDate}
       />
     </ChakraProvider>
   );
